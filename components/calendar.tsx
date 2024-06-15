@@ -133,8 +133,8 @@ export const Calendar: React.FC<CalendarProps> = props => {
           events.push({ date: "berpuasa pada mayoritas harinya (bukan seluruh harinya)", name: "Puasa Sya'ban" });
         }
 
-        if (!events.some(e => e.name === "Puasa di awal Dzulhijah") && isEarlyDhulhijjah) {
-          events.push({ date: "berpuasa pada 9 hari awal Dzulhijah", name: "Puasa di awal Dzulhijah" });
+        if (!events.some(e => e.name === "Puasa Dzulhijah") && isEarlyDhulhijjah) {
+          events.push({ date: "berpuasa 9 hari awal Dzulhijah", name: "Puasa Dzulhijah" });
         }
 
         return {
