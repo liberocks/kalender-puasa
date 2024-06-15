@@ -25,7 +25,7 @@ export const Footer: React.FC<{ today: Dayjs }> = props => {
                 </a>
               </li>
               <li>
-                <a href="https://rumaysho.com/7657-hukum-puasa-ramadhan.html" target="_blank">
+                <a href="https://rumaysho.com/20169-matan-abu-syuja-hari-terlarang-puasa.html" target="_blank">
                   3. https://rumaysho.com/20169-matan-abu-syuja-hari-terlarang-puasa.html
                 </a>
               </li>
