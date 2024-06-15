@@ -9,6 +9,7 @@
     "lint": "next lint",
     "format": "bun prettier . --write"
   },
+  "packageManager": "pnpm@9.1.1",
   "dependencies": {
     "@calidy/dayjs-calendarsystems": "^1.11.3",
     "@headlessui/react": "^2.0.4",
