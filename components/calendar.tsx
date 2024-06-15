@@ -50,7 +50,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
   let endOffset = 6 - parseInt(endOfMonth.format("d"));
 
   const month: IMonth = {
-    name: selectedMonth.format("MMMM"),
+    name: selectedMonth.format("MMMM YYYY"),
     days: [
       ...Array.from(Array(startOffset).keys()).map(_ => ({ date: "" })),
       ...Array.from(Array(totalDays + 1).keys()).map(item => {
@@ -215,8 +215,16 @@ export const Calendar: React.FC<CalendarProps> = props => {
                     day.isAshura && "bg-lime-300",
                     "tooltip-toggle",
                   )}
-                  aria-label={dayjs(day.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")}
-                  aria-details={dayjs(day.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")}
+                  aria-label={
+                    dayjs(day.date).isValid
+                      ? dayjs(day.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")
+                      : ""
+                  }
+                  aria-details={
+                    dayjs(day.date).isValid
+                      ? dayjs(day.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")
+                      : ""
+                  }
                 >
                   {(day.date.split("-").pop() ?? "").replace(/^0/, "")}
                 </time>
