@@ -245,12 +245,14 @@ export const Calendar: React.FC<CalendarProps> = props => {
                           "mb-2 flex-none rounded-lg bg-white px-2 py-0.5",
                         )}
                         aria-label={
-                          dayjs(item.date).isValid() &&
-                          dayjs(item.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")
+                          dayjs(item.date).isValid()
+                            ? dayjs(item.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")
+                            : ""
                         }
                         aria-details={
-                          dayjs(item.date).isValid() &&
-                          dayjs(item.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")
+                          dayjs(item.date).isValid()
+                            ? dayjs(item.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")
+                            : ""
                         }
                       >
                         {dayjs(item.date).isValid() ? item.date.format("D MMMM") : item.date}

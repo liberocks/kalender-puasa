@@ -27,11 +27,11 @@ export const Header: React.FC<{ today: Dayjs }> = props => {
         </div>
 
         <div className="flex flex-row text-right">
-          <a href="#" className="leading-1 text-sm font-medium text-gray-900">
+          <div className="leading-1 text-sm font-medium text-gray-900">
             <p>{today.format("D MMMM YYYY")}</p>
             <p className="text-gray-600">{today.toCalendarSystem("islamic").format("D MMMM YYYY")}</p>
             <p className="sr-only">{today.toCalendarSystem("gregory").format("D MMMM YYYY")}</p>
-          </a>
+          </div>
         </div>
       </nav>
     </header>
