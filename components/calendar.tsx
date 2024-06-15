@@ -28,6 +28,7 @@ interface IMonth {
     isEidAlFitr?: boolean;
     isAshura?: boolean;
     isTasua?: boolean;
+    isTasyriq?: boolean;
   }[];
 }
 
@@ -57,19 +58,23 @@ export const Calendar: React.FC<CalendarProps> = props => {
         const hijriDay = startOfMonth.add(item, "days").toCalendarSystem("islamic");
         const currentDate = startOfMonth.add(item, "days").toCalendarSystem("gregory");
 
-        const isToday = currentDate.isSame(dayjs(), "day");
-        const isMondayThursday = [1, 4].includes(parseInt(currentDate.format("d")));
-        const isAyyamulBidh = [13, 14, 15].includes(parseInt(hijriDay.format("D")));
-        const isTarwiyah = hijriDay.format("D-M") === "8-12";
-        const isArafah = hijriDay.format("D-M") === "9-12";
         const isEidAlFitr = hijriDay.format("D-M") === "1-10";
         const isEidAlAdha = hijriDay.format("D-M") === "10-12";
-        const isFasting = isMondayThursday || isAyyamulBidh || isArafah || isTarwiyah;
-        const isProhibited = isEidAlFitr || isEidAlAdha;
+        const isTasyriq = ["11-12", "12-12", "13-12"].includes(hijriDay.format("D-M"));
+        const isProhibited = isEidAlFitr || isEidAlAdha || isTasyriq;
+
+        const isToday = currentDate.isSame(dayjs(), "day");
+        const isMondayThursday = !isProhibited && [1, 4].includes(parseInt(currentDate.format("d")));
+        const isAyyamulBidh = !isProhibited && [13, 14, 15].includes(parseInt(hijriDay.format("D")));
+        const isTarwiyah = hijriDay.format("D-M") === "8-12";
+        const isArafah = hijriDay.format("D-M") === "9-12";
         const isRamadhan = hijriDay.format("M") === "9";
-        const isSyawwal = hijriDay.format("M") === "10";
+        const isSyawwal = !isProhibited && hijriDay.format("M") === "10";
         const isAshura = hijriDay.format("D-M") === "10-1";
         const isTasua = hijriDay.format("D-M") === "9-1";
+
+        const isFasting = isMondayThursday || isAyyamulBidh || isArafah || isTarwiyah || !isProhibited;
+
         const isRecurring =
           !isArafah ||
           !isTarwiyah ||
@@ -78,7 +83,8 @@ export const Calendar: React.FC<CalendarProps> = props => {
           !isRamadhan ||
           !isSyawwal ||
           !isAshura ||
-          !isTasua;
+          !isTasua ||
+          !isTasyriq;
 
         if (isMondayThursday) {
           events.push({ date: currentDate, name: "Puasa Senin Kamis" });
@@ -118,6 +124,10 @@ export const Calendar: React.FC<CalendarProps> = props => {
 
         if (isTasua) {
           events.push({ date: currentDate, name: "Puasa Tasua" });
+        }
+
+        if (isTasyriq) {
+          events.push({ date: currentDate, name: "Hari Tasyriq (haram berpuasa)" });
         }
 
         return {
@@ -178,6 +188,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
                 type="button"
                 className={cx(
                   day.isCurrentMonth ? "bg-white text-gray-900" : "bg-gray-50 text-gray-400",
+                  day.isToday && "bg-marjan-100 font-semibold",
                   "has-tooltip relative py-1.5 hover:bg-gray-100 focus:z-10",
                 )}
               >
@@ -188,8 +199,9 @@ export const Calendar: React.FC<CalendarProps> = props => {
                       day.isMondayThursday &&
                       !day.isAyyamulBidh &&
                       !day.isProhibited &&
+                      !day.isRamadhan &&
                       "bg-yellow-200",
-                    day.isRecurring && day.isAyyamulBidh && "bg-orange-200",
+                    day.isRecurring && day.isAyyamulBidh && !day.isRamadhan && "bg-orange-200",
                     "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
                     day.isArafah && "bg-blue-200",
                     day.isTarwiyah && "bg-blue-200",
