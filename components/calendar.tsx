@@ -213,7 +213,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
                     day.isRamadhan && "bg-marjan-600 font-semibold text-white",
                     day.isSyawal && !day.isProhibited && "border-2 border-orange-200",
                     day.isAshura && "bg-lime-300",
-                    "tooltip-toggle",
+                    dayjs(day.date).isValid() && "tooltip-toggle",
                   )}
                   aria-label={
                     dayjs(day.date).isValid()
