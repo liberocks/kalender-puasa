@@ -7,11 +7,29 @@ export const Footer: React.FC<{ today: Dayjs }> = props => {
     <footer aria-labelledby="footer-heading">
       <div className="mx-auto max-w-7xl">
         <div className="border-t border-gray-900/10 pt-8">
-          <div>
-            <p className="mt-2 text-center text-sm leading-6 text-gray-600">
+          <div className="text-sm leading-6 text-gray-600">
+            <p className="mt-2">
               Kalender ini bersifat perhitungan dan estimasi. Untuk kepastian, silakan merujuk kepada otoritas agama
               setempat.
             </p>
+            <p className="mt-2">Referensi: </p>
+            <ol className="underline">
+              <li>
+                <a href="https://rumaysho.com/1127-8-macam-puasa-sunnah.html" target="_blank">
+                  1. https://rumaysho.com/1127-8-macam-puasa-sunnah.html
+                </a>
+              </li>
+              <li>
+                <a href="https://rumaysho.com/7657-hukum-puasa-ramadhan.html" target="_blank">
+                  2. https://rumaysho.com/7657-hukum-puasa-ramadhan.html
+                </a>
+              </li>
+              <li>
+                <a href="https://rumaysho.com/7657-hukum-puasa-ramadhan.html" target="_blank">
+                  3.https://rumaysho.com/20169-matan-abu-syuja-hari-terlarang-puasa.html
+                </a>
+              </li>
+            </ol>
           </div>
           <form className="mt-6 sm:flex sm:max-w-md lg:mt-0">
             <label htmlFor="email-address" className="sr-only">

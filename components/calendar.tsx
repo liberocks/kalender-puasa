@@ -20,15 +20,14 @@ interface IMonth {
     isAyyamulBidh?: boolean;
     isMondayThursday?: boolean;
     isRecurring?: boolean;
-    isTarwiyah?: boolean;
     isArafah?: boolean;
     isRamadhan?: boolean;
-    isSyawwal?: boolean;
+    isSyawal?: boolean;
     isEidAlAdha?: boolean;
     isEidAlFitr?: boolean;
     isAshura?: boolean;
-    isTasua?: boolean;
     isTasyriq?: boolean;
+    isEarlyDhulhijjah?: boolean;
   }[];
 }
 
@@ -41,7 +40,7 @@ interface CalendarProps {
 export const Calendar: React.FC<CalendarProps> = props => {
   const { locale, selectedMonth } = props;
 
-  const events: { date: Dayjs; name: string }[] = [];
+  const events: { date: Dayjs | string; name: string }[] = [];
 
   const startOfMonth = selectedMonth.startOf("month");
   const endOfMonth = selectedMonth.endOf("month");
@@ -66,25 +65,29 @@ export const Calendar: React.FC<CalendarProps> = props => {
         const isToday = currentDate.isSame(dayjs(), "day");
         const isMondayThursday = !isProhibited && [1, 4].includes(parseInt(currentDate.format("d")));
         const isAyyamulBidh = !isProhibited && [13, 14, 15].includes(parseInt(hijriDay.format("D")));
-        const isTarwiyah = hijriDay.format("D-M") === "8-12";
-        const isArafah = hijriDay.format("D-M") === "9-12";
-        const isRamadhan = hijriDay.format("M") === "9";
-        const isSyawwal = !isProhibited && hijriDay.format("M") === "10";
-        const isAshura = hijriDay.format("D-M") === "10-1";
-        const isTasua = hijriDay.format("D-M") === "9-1";
 
-        const isFasting = isMondayThursday || isAyyamulBidh || isArafah || isTarwiyah || !isProhibited;
+        const isArafah = hijriDay.format("D-M") === "9-12";
+        const isEarlyDhulhijjah = ["1-12", "2-12", "3-12", "4-12", "5-12", "6-12", "7-12", "8-12", "9-12"].includes(
+          hijriDay.format("D-M"),
+        );
+
+        const isRamadhan = hijriDay.format("M") === "9";
+        const isSyawal = !isProhibited && hijriDay.format("M") === "10";
+        const isAshura = ["9-1", "10-1"].includes(hijriDay.format("D-M"));
+
+        const isSyaban = hijriDay.format("M") === "8";
+
+        const isFasting = isMondayThursday || isAyyamulBidh || isArafah || !isProhibited;
 
         const isRecurring =
           !isArafah ||
-          !isTarwiyah ||
           !isEidAlFitr ||
           !isEidAlAdha ||
           !isRamadhan ||
-          !isSyawwal ||
+          !isSyawal ||
           !isAshura ||
-          !isTasua ||
-          !isTasyriq;
+          !isTasyriq ||
+          !isEarlyDhulhijjah;
 
         if (isMondayThursday) {
           events.push({ date: currentDate, name: "Puasa Senin Kamis" });
@@ -92,10 +95,6 @@ export const Calendar: React.FC<CalendarProps> = props => {
 
         if (isAyyamulBidh) {
           events.push({ date: currentDate, name: "Puasa Ayyamul Bidh" });
-        }
-
-        if (isTarwiyah) {
-          events.push({ date: currentDate, name: "Puasa Tarwiyah" });
         }
 
         if (isArafah) {
@@ -114,20 +113,28 @@ export const Calendar: React.FC<CalendarProps> = props => {
           events.push({ date: currentDate, name: "Puasa Ramadhan" });
         }
 
-        if (isSyawwal && !isEidAlFitr) {
-          events.push({ date: currentDate, name: "Puasa 6 hari Syawwal" });
+        if (!events.some(e => e.name === "Puasa Syawal") && isSyawal && !isEidAlFitr) {
+          events.push({ date: "berpuasa 6 hari di bulan Syawal", name: "Puasa Syawal" });
         }
 
         if (isAshura) {
-          events.push({ date: currentDate, name: "Puasa Asyura" });
-        }
-
-        if (isTasua) {
-          events.push({ date: currentDate, name: "Puasa Tasua" });
+          events.push({ date: currentDate, name: "Puasa 'Asyura" });
         }
 
         if (isTasyriq) {
           events.push({ date: currentDate, name: "Hari Tasyriq (haram berpuasa)" });
+        }
+
+        if (!events.some(e => e.name === "Puasa Daud") && !isRamadhan) {
+          events.push({ date: "sehari berpuasa sehari tidak", name: "Puasa Daud" });
+        }
+
+        if (!events.some(e => e.name === "Puasa Sya'ban") && isSyaban) {
+          events.push({ date: "berpuasa pada mayoritas harinya (bukan seluruh harinya)", name: "Puasa Sya'ban" });
+        }
+
+        if (!events.some(e => e.name === "Puasa di awal Dzulhijah") && isEarlyDhulhijjah) {
+          events.push({ date: "berpuasa pada sembilan hari awal Dzulhijah", name: "Puasa di awal Dzulhijah" });
         }
 
         return {
@@ -138,13 +145,11 @@ export const Calendar: React.FC<CalendarProps> = props => {
           isAyyamulBidh,
           isFasting,
           isArafah,
-          isTarwiyah,
           isRecurring,
           isProhibited,
           isRamadhan,
-          isSyawwal,
+          isSyawal,
           isAshura,
-          isTasua,
         };
       }),
       ...Array.from(Array(endOffset).keys()).map(_ => ({ date: "" })),
@@ -189,7 +194,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
                 className={cx(
                   day.isCurrentMonth ? "bg-white text-gray-900" : "bg-gray-50 text-gray-400",
                   day.isToday && "bg-marjan-100 font-semibold",
-                  "has-tooltip relative py-1.5 hover:bg-gray-100 focus:z-10",
+                  "relative py-1.5 hover:bg-gray-100 focus:z-10",
                 )}
               >
                 <time
@@ -204,12 +209,10 @@ export const Calendar: React.FC<CalendarProps> = props => {
                     day.isRecurring && day.isAyyamulBidh && !day.isRamadhan && "bg-orange-200",
                     "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
                     day.isArafah && "bg-blue-200",
-                    day.isTarwiyah && "bg-blue-200",
                     day.isProhibited && "bg-red-500 text-white",
                     day.isRamadhan && "bg-marjan-600 font-semibold text-white",
-                    day.isSyawwal && !day.isProhibited && "border-2 border-orange-200",
+                    day.isSyawal && !day.isProhibited && "border-2 border-orange-200",
                     day.isAshura && "bg-lime-300",
-                    day.isTasua && "bg-lime-300",
                     "tooltip-toggle",
                   )}
                   aria-label={dayjs(day.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")}
@@ -235,11 +238,22 @@ export const Calendar: React.FC<CalendarProps> = props => {
                   {(value as any[]).map((item, index) => {
                     return (
                       <time
-                        key={item.date.format("D MMMM")}
+                        key={dayjs(item.date).isValid() ? item.date.format("D MMMM") : item.date}
                         dateTime="item.date.format('D MMMM')}"
-                        className="mb-2 flex-none rounded-lg bg-white px-2 py-0.5"
+                        className={cx(
+                          dayjs(item.date).isValid() && "tooltip-toggle",
+                          "mb-2 flex-none rounded-lg bg-white px-2 py-0.5",
+                        )}
+                        aria-label={
+                          dayjs(item.date).isValid() &&
+                          dayjs(item.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")
+                        }
+                        aria-details={
+                          dayjs(item.date).isValid() &&
+                          dayjs(item.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")
+                        }
                       >
-                        {item.date.format("D MMMM")}
+                        {dayjs(item.date).isValid() ? item.date.format("D MMMM") : item.date}
                       </time>
                     );
                   })}
