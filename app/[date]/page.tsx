@@ -5,19 +5,20 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Metadata } from "next";
 
 import { Calendar, Container, Footer, Header } from "@/components";
+import { createMetadata } from "@/utils";
 
 require("dayjs/locale/id");
 
 const locale = "id";
 const today = dayjs().locale(locale);
 
-export const metadata: Metadata = {
-  title: `Kalender Puasa Muslim ${today.format("MMMM YYYY")}`,
-  description: `Kalender Puasa Wajib dan Sunnah untuk Muslim tahun ${today.format("MMMM YYYY")}`,
-  icons: {
-    icon: "/kal.png",
-  },
-};
+export async function generateMetadata(props: { params: Record<string, string> }): Promise<Metadata> {
+  const { params } = props;
+
+  const date = dayjs(params.date, "MM-YYYY");
+
+  return createMetadata(date);
+}
 
 dayjs.extend(customParseFormat);
 dayjs.extend(calendarSystems);
@@ -28,8 +29,8 @@ export default function SpecificDate(props: { params: Record<string, string> }) 
 
   let selectedMonth = today.clone();
 
-  if (params.date && dayjs(params.date, "MMMM-YYYY", locale).isValid()) {
-    selectedMonth = dayjs(params.date, "MMMM-YYYY", locale);
+  if (params.date && dayjs(params.date, "MM-YYYY", locale).isValid()) {
+    selectedMonth = dayjs(params.date, "MM-YYYY", locale);
   }
 
   return (

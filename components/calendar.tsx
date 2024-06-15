@@ -147,7 +147,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
         <Link
           replace
           className="absolute -left-1.5 -top-1 flex items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-          href={`/${selectedMonth.subtract(1, "month").format("MMMM-YYYY")}`}
+          href={`/${selectedMonth.subtract(1, "month").format("MM-YYYY")}`}
         >
           <span className="sr-only">Bulan sebelumnya</span>
           <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -155,7 +155,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
         <Link
           replace
           className="absolute -right-1.5 -top-1 flex items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-          href={`/${selectedMonth.add(1, "month").format("MMMM-YYYY")}`}
+          href={`/${selectedMonth.add(1, "month").format("MM-YYYY")}`}
         >
           <span className="sr-only">Bulan selanjutnya</span>
           <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -201,8 +201,8 @@ export const Calendar: React.FC<CalendarProps> = props => {
                     "tooltip-toggle",
                   )}
                   aria-label={dayjs(day.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")}
+                  aria-details={dayjs(day.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")}
                 >
-                  <span className="sr-only">{dayjs(day.date).toCalendarSystem("gregory").format("D MMMM YYYY")}</span>
                   {(day.date.split("-").pop() ?? "").replace(/^0/, "")}
                 </time>
               </button>

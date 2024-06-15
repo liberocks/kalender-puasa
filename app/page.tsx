@@ -5,19 +5,14 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Metadata } from "next";
 
 import { Calendar, Container, Footer, Header } from "@/components";
+import { createMetadata } from "@/utils";
 
 require("dayjs/locale/id");
 
 const locale = "id";
 const today = dayjs().locale(locale);
 
-export const metadata: Metadata = {
-  title: `Kalender Puasa Muslim ${today.format("MMMM YYYY")}`,
-  description: `Kalender Puasa Wajib dan Sunnah untuk Muslim tahun ${today.format("MMMM YYYY")}`,
-  icons: {
-    icon: "/kal.png",
-  },
-};
+export const metadata: Metadata = createMetadata(today);
 
 dayjs.extend(customParseFormat);
 dayjs.extend(calendarSystems);
