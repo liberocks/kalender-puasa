@@ -216,13 +216,14 @@ export const Calendar: React.FC<CalendarProps> = props => {
         <ol className="mt-2 divide-y divide-gray-200 text-sm leading-6 text-gray-500">
           {Object.entries(groupBy(events, "name")).map(([key, value]) => {
             return (
-              <li className="flex items-center py-4 align-middle">
+              <li className="flex items-center py-4 align-middle" key={`key`}>
                 <p className="min-w-[50%] flex-auto font-medium text-gray-800 sm:mt-0">{key}</p>
 
                 <div className="flex w-full flex-wrap justify-end space-x-2">
                   {(value as any[]).map((item, index) => {
                     return (
                       <time
+                        key={item.date.format("D MMMM")}
                         dateTime="item.date.format('D MMMM')}"
                         className="mb-2 flex-none rounded-lg bg-white px-2 py-0.5"
                       >
