@@ -134,7 +134,7 @@ export const Calendar: React.FC<CalendarProps> = props => {
         }
 
         if (!events.some(e => e.name === "Puasa di awal Dzulhijah") && isEarlyDhulhijjah) {
-          events.push({ date: "berpuasa pada sembilan hari awal Dzulhijah", name: "Puasa di awal Dzulhijah" });
+          events.push({ date: "berpuasa pada 9 hari awal Dzulhijah", name: "Puasa di awal Dzulhijah" });
         }
 
         return {
@@ -216,12 +216,12 @@ export const Calendar: React.FC<CalendarProps> = props => {
                     "tooltip-toggle",
                   )}
                   aria-label={
-                    dayjs(day.date).isValid
+                    dayjs(day.date).isValid()
                       ? dayjs(day.date).locale(locale).toCalendarSystem("islamic").format("D MMMM YYYY")
                       : ""
                   }
                   aria-details={
-                    dayjs(day.date).isValid
+                    dayjs(day.date).isValid()
                       ? dayjs(day.date).locale(locale).toCalendarSystem("gregory").format("D MMMM YYYY")
                       : ""
                   }
